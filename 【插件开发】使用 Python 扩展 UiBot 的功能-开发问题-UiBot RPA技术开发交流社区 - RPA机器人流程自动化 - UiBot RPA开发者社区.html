@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)https://forum.uibot.com.cn/thread-51.htm -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+		
+	
+	
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+		<meta name="keywords" content="【插件开发】使用 Python 扩展 UiBot 的功能,rpa,rpa技术,rpa开发,rpa机器人,机器人流程自动化">
+	
+	<meta name="description" content="前言：
+
+UiBot 除了自带的强大功能外，还允许有编程经验的开发人员对功能进行自由扩展，目前 UiBot 支持以下四种扩展方式：
+
+Python 插件、Lua 插件、Lua Mod 插件、COM 插件（&amp;nbs">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta http-equiv="Cache-Control" content="no-transform">
+	<meta http-equiv="Cache-Control" content="no-siteapp">
+	
+	<title>【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区</title>
+	
+	
+	
+	<link rel="shortcut icon" href="https://forum.uibot.com.cn/view/img/favicon.ico">
+	<link rel="icon" sizes="32x32" href="https://forum.uibot.com.cn/view/img/favicon.ico">
+	<link rel="Bookmark" href="https://forum.uibot.com.cn/view/img/favicon.ico">
+	
+	
+		<link rel="stylesheet" href="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/bootstrap.css">
+	
+	
+	
+		<link rel="stylesheet" href="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/bootstrap-bbs.css">
+	
+	
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/hm.js.下载"></script><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e446052c7e3e823b3d50cd3a43475f91";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<style>
+/*
+box-shadow: 0 0 5px red;
+*/
+@keyframes xndigest {
+	0% { color: red; text-shadow: 0 0 3px #FF8D8D;} 
+	20% { color: orange; text-shadow: 0 0 3px #FFE1AD;} 
+	40% { color: green; text-shadow: 0 0 3px #B3FFAF;} 
+	65% { color: blue; text-shadow: 0 0 3px #AFE4FF;} 
+	80% { color: purple; text-shadow: 0 0 3px #FFC9F3;} 
+	100% { color: red; text-shadow: 0 0 3px #FF8D8D;} 
+}
+
+/*水晶闪烁效果 占内存*/
+i.icon-diamond.flash{color: #D53D38;  /*animation: xndigest 5s linear infinite;*/ }
+
+i.icon-digest-1 {  text-shadow: 0 0 3px #AFE4FF; }
+i.icon-digest-2 {  text-shadow: 0 0 3px #FFF177; }
+i.icon-digest-3 {  text-shadow: 0 0 3px #FF8D8D; }
+.icon-digest-1:before { content: "\f219";  color: #5BC0DE;} /* "\f0a5" */
+.icon-digest-2:before { content: "\f219";  color: #ECA541;}
+.icon-digest-3:before { content: "\f219"; color: #D53D38;}
+.icon-digest-3:afteer { content: "精"; color: #D53D38;}
+</style><style>
+body { background: #ebebeb !important;}
+#header { background: rgba(81,119,199,1) !important; }
+#footer { background: #555 !important; }
+/*.card > .card-header { background-image: linear-gradient(0deg, #c4d9e3, #fcfdfd); }*/
+.card { background: #fff !important; }
+.thread:hover { background-color: rgba(255,255,255,0.6) !important; }
+.text-grey { color: #90a9b6 !important;}
+.thread, .post { border-bottom: 1px solid #dfeef2;}
+.input-group .form-control, .input-group .custom-select, .input-group .custom-file { background: rgba(255,255,255,0.7);}
+.card-header-tabs > .nav-item > .nav-link.active { background-image: linear-gradient(0deg, #dfedf4, #f2f2f2); border-color: #c9dce5; border-bottom-color: #dfebf1;}
+.nav_tag_list a { color: #c5dbe4; }
+.nav_tag_list a.active { color: #6fd2ff; }
+.btn-primary { background-color: #7c9ad9; border-color:#7c9ad9; } 
+.btn-secondary { background-color:#5177c7; border-color:#5177c7; }
+.btn-secondary:hover { background-color: #7c9ad9; border-color: #7c9ad9; }
+.page-item.active .page-link { background-color:#5177c7; border-color: #5177c7; }
+.blockquote { background: #e0eaef;}
+.logo-2 { height: 1.5rem; }
+@media (max-width:576px) {
+  .logo-2 {height:1rem }
+}
+#footer a { color: white; }
+#footer a:hover { text-decoration:none; }
+</style>
+
+	
+</head>
+
+<body>
+	
+	
+	
+	
+	<!-- 
+		轻论坛导航：默认头部
+		Bootstrap 4.0 推荐的 PC/Mobile 公共写法 
+		优点：公用性强
+		缺点：结构稍微有点复杂
+	-->
+	
+	
+	<header class="navbar navbar-expand-lg navbar-dark bg-dark" id="header">
+		<div class="container">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-controls="navbar_collapse" aria-expanded="false" aria-label="展开菜单">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			
+			
+			
+			<a class="navbar-brand text-truncate" href="https://forum.uibot.com.cn/forum-6.htm">
+				<img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/logo.png" class="logo-2">
+									<span class="hidden-lg">开发问题</span>
+							</a>
+			
+			
+			
+							<a class="navbar-brand hidden-lg" href="https://forum.uibot.com.cn/thread-create-6.htm" aria-label="发表主题"><i class="icon-edit icon"></i></a>
+						
+			
+			
+			<div class="collapse navbar-collapse" id="nav">
+				<!-- 左侧：版块 -->
+				<ul class="navbar-nav mr-auto">
+					
+					<li class="nav-item home"><a class="nav-link" href="https://www.uibot.com.cn/" target="_blank"><i class="icon-home d-md-none"></i> 首页</a></li>
+                                        <li class="nav-item" fid="0" data-active="fid-0"><a class="nav-link" href="https://forum.uibot.com.cn/">社区首页</a></li>
+					
+										
+					<li class="nav-item" fid="1" data-active="fid-1">
+						<a class="nav-link" href="https://forum.uibot.com.cn/forum-1.htm"><i class="icon-circle-o d-md-none"></i> 通知公告</a>
+					</li>
+					
+										
+					<li class="nav-item active" fid="6" data-active="fid-6">
+						<a class="nav-link" href="https://forum.uibot.com.cn/forum-6.htm"><i class="icon-circle-o d-md-none"></i> 开发问题</a>
+					</li>
+					
+										
+					<li class="nav-item" fid="2" data-active="fid-2">
+						<a class="nav-link" href="https://forum.uibot.com.cn/forum-2.htm"><i class="icon-circle-o d-md-none"></i> STORE</a>
+					</li>
+					
+										
+					<li class="nav-item" fid="8" data-active="fid-8">
+						<a class="nav-link" href="https://forum.uibot.com.cn/forum-8.htm"><i class="icon-circle-o d-md-none"></i> 教程学习</a>
+					</li>
+					
+										
+					<li class="nav-item" fid="9" data-active="fid-9">
+						<a class="nav-link" href="https://forum.uibot.com.cn/forum-9.htm"><i class="icon-circle-o d-md-none"></i> 源码插件</a>
+					</li>
+					
+										
+					<li class="nav-item" fid="7" data-active="fid-7">
+						<a class="nav-link" href="https://forum.uibot.com.cn/forum-7.htm"><i class="icon-circle-o d-md-none"></i> RPA新闻</a>
+					</li>
+					
+										
+					<li class="nav-item" fid="10" data-active="fid-10">
+						<a class="nav-link" href="https://forum.uibot.com.cn/forum-10.htm"><i class="icon-circle-o d-md-none"></i> 对话机器人</a>
+					</li>
+					
+										
+				</ul>
+				<!-- 右侧：用户 -->
+				<ul class="navbar-nav">
+					<li class="nav-item hidden-lg">
+	<a class="nav-link" href="https://forum.uibot.com.cn/search.htm"><i class="icon-search"></i> 搜索</a>
+</li>
+									<li class="nav-item username"><a class="nav-link" href="https://forum.uibot.com.cn/my.htm"><img class="avatar-1" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png"> chay</a></li>
+					<!-- 管理员 -->
+										
+					<li class="nav-item"><a class="nav-link" href="https://forum.uibot.com.cn/user-logout.htm"><i class="icon-sign-out"></i> 退出</a></li>
+									
+				</ul>
+			</div>
+		</div>
+	</header>
+	
+
+	<main id="body">
+		<div class="container">
+	
+		
+
+
+
+<div class="row">
+	<div class="col-lg-9 main">
+		
+				<ol class="breadcrumb d-none d-md-flex">
+			<li class="breadcrumb-item"><a href="https://forum.uibot.com.cn/" aria-label="首页"><i class="icon-home"></i></a></li>
+			<li class="breadcrumb-item"><a href="https://forum.uibot.com.cn/forum-6.htm">开发问题</a></li>
+			<li class="breadcrumb-item active"><a href="https://forum.uibot.com.cn/thread-51.htm" title="首页返回主题第一页">【插件开发】使用 Python 扩展 UiBot 的功能</a></li>
+			
+		</ol>
+				
+		
+		<div class="card card-thread">
+			<div class="card-body">
+				<div class="media">
+					<a href="https://forum.uibot.com.cn/user-6666.htm" tabindex="-1">
+						<img class="avatar-3 mr-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+					</a>
+					<div class="media-body">
+						
+						<h4 class="break-all">
+							
+							【插件开发】使用 Python 扩展 UiBot 的功能							
+
+						</h4>
+						
+						<div class="d-flex justify-content-between small">
+							<div>
+								
+								<span class="username">
+									<a href="https://forum.uibot.com.cn/user-6666.htm" class="text-muted font-weight-bold">游客</a>
+								</span>
+								<span class="date text-grey ml-2">2019-1-14</span>
+								<span class="text-grey ml-2"><i class="icon-eye"></i> 14624</span>
+								
+							</div>
+							<div>
+								
+																
+																
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="message break-all" isfirst="1">
+								
+					
+					<pre class="brush:bash;toolbar:false">前言：
+
+UiBot&nbsp;除了自带的强大功能外，还允许有编程经验的开发人员对功能进行自由扩展，目前&nbsp;UiBot&nbsp;支持以下四种扩展方式：
+
+Python&nbsp;插件、Lua&nbsp;插件、Lua&nbsp;Mod&nbsp;插件、COM&nbsp;插件（&nbsp;.Net&nbsp;也使用这种方式扩展）
+
+本期教程将为大家讲解如何利用这四种扩展方式扩充&nbsp;UiBot&nbsp;的功能。</pre><p><br></p><p>Python 插件开发教程：</p><p><br></p><p><br></p><p><br></p><p>1. 插件开发快速上手：</p><p><br></p><p>打开 UiBot 安装目录下的&nbsp;extend \ python 目录，在这个目录下创建 test.py 文件（记得修改文件扩展名），使用记事本打开这个文件，写入如下代码：</p><pre class="brush:python;toolbar:false">def&nbsp;Add(n1,&nbsp;n2):
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;n1&nbsp;+&nbsp;n2</pre><p><br></p><p>然后将文件另存为 utf-8 编码格式：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_JX92CRGFGRRY3JM.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>插件保存后，打开 UiBot 在源代码视图写入代码：</p><pre class="brush:cpp;toolbar:false">Import&nbsp;test
+traceprint&nbsp;test.add(1,&nbsp;1)</pre><p><br></p><p>运行 UiBot 脚本，运行后结果如下（输出2）代表插件调用正常：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_Y7ZTU6V5MQ587K7.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>如果运行结果不正常，可根据输出窗格的报错提示尝试解决，如果报错为 模块test没有加载成功，则检查 test.py 中的代码是否正确、文件名和路径是否正确（例如文件后缀问题）</p><p><br></p><p><br></p><p><br></p><p>2. 开发环境部署（VS Code）：</p><p><br></p><p>使用 Python 编写 UiBot 扩展库很容易，但 Python 本身是一门独立的编程语言，使用文本编辑器开发和调试都很不方便，因此建议使用 VS Code 集成开发环境做 Python 扩展库开发。</p><p><br></p><p>首先需要在机器上安装 Python 3.7.1，下载地址：<a href="https://www.python.org/downloads/release/python-371/" target="_blank" title="Python 3.7.1" _href="https://www.python.org/downloads/release/python-371/">https://www.python.org/downloads/release/python-371/</a></p><p>下载时选择 Windows x86-64 executable installer 版本，下载完成后直接安装。</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_F99BU8CQW52UGND.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>安装 Python 时需要勾选 Add Python 3.7 to PATH，然后点击 Install Now 安装即可：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_NAMJMZAKT9XTCEM.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>然后在机器上安装 VS Code，下载地址：<a href="https://code.visualstudio.com/" target="_blank" title="VS Code" _href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_2DCGTNURF3D2FAR.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>VS Code 安装完成后，是英文版本：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_GMQ5KDDZJXHJM9P.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>点击 VS Code 左侧边栏上方最后一个按钮（见截图），然后在搜索框里输入 Chinese，找到简体中文语言包安装：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_7M4NJKHU2EVGZEX.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>安装完成后，VS Code 会提示是否重启编辑器使语言包生效，重启后软件即可显示为中文：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_WHJT6KFNSTNGKNV.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>如果这步完成后语言没有切换成功，可以按热键 Ctrl + Shift + P，搜索 Configure Display Language，配置显示语言：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_VK4YXH9U7QE4RRU.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>将红圈选中的内容更改为 zh-cn，保存文件后重启 VS Code，即可更换为中文显示：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_RF27PUWMKQW2R93.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>VS Code 和 Python 都安装完成后，使用 VS Code 打开任意 py 后缀的文件，会自动提示是否安装 Python 开发环境</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_JVQ3QQJPBQ287XY.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p>Python 扩展安装完成后，VS Code 还会要求你安装 pylint，这是在 VS Code 开发时用于语法错误检查的组件，可以根据自己的需求选择是否安装。</p><p><br></p><p>以上步骤操作后，使用 VS Code 的 Python 开发环境就部署完毕了，编写代码，然后F5运行看看效果吧。</p><p><br></p><p><br></p><p><br></p><p>3. Python 插件测试：</p><p><br></p><p>在 Python 文件中写入如下代码，这段代码在 UiBot 环境下是不会运行的，但在 Python 调试状态下会运行，以此实现更便捷的 Python 扩展库调试：</p><pre class="brush:python;toolbar:false">#&nbsp;测试代码
+if&nbsp;__name__&nbsp;==&nbsp;'__main__':
+&nbsp;&nbsp;&nbsp;&nbsp;print(123)</pre><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/6666_X3QD3R886DXQNPB.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"><br></p><p><br></p><p><br></p><p><br></p><p>4. UiBot 调用方法：</p><p><br></p><p>插件的文件名即为插件名，例如我们编写的插件文件名为 test.py，则在 UiBot 中使用 Import test 即可载入插件。</p><p><br></p><p>对于 Python 插件来说，每个 def 的函数都可以使用 UiBot 调用。</p><p><br></p><p>目前 UiBot 还不支持 Python 插件中的一些特性，例如 可选参数、可变参数。</p><p><br></p><p><br></p><p><br></p><p>5. 插件使用的其他组件安装到 UiBot：</p><p><br></p><p>UiBot 内置的 Python 运行环境包含了绝大多数 Python 自带的扩展库和 pywin32 等使用频度较高的库，但仍不能保证全部覆盖，如果你在开发 Python 插件的过程中，使用了 UiBot 没有附带的库，则可能产生插件在 Python 环境下运行正常，在 UiBot 环境下运行不正常的问题，这时候就需要将对应的扩展库添加到 UiBot 安装目录下的&nbsp;lib \ site-packages 文件夹中解决。</p><p><br></p><p><br></p><p><br></p><p>6. Python依赖的存放位置：</p><p>我们在编写Python扩展时经常会用到pip安装其他的第三方依赖模块，如果要在UiBot&nbsp;中顺利使用自己编写的扩展，那么同样要把这些第三方模块置入到UiBot&nbsp;中，下面我们拿Python中的"requests"模块举例。</p><p>首先通过pip show requests命令，我们可以看到如下信息：</p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/10004_SAS5RK6WSZGE8SA.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><strong><span style="color:#ff0000">其中&nbsp;Location代表当前开发环境第三方库的安装位置，Requires代表requests模块的依赖，我们需要进到Location目录下，将对应模块（包含自身）拷贝到UiBot安装目录下的\lib\site-packages之中</span></strong></p><p><strong><span style="color:#ff0000"><br></span></strong></p><p><strong><span style="color:#ff0000"><span style="font-weight: bolder;color:#ff0000">Location对应目录</span></span></strong></p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/10004_GPXXXTYJSF38XX5.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/10004_2BT8FRJJZAF6KBQ.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p><br></p><p><strong><span style="color:#ff0000">UiBot对应目录</span></strong></p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/10004_TRP394KH9CGMMU7.png" alt="_【插件开发】使用 Python 扩展 UiBot 的功能" title="_【插件开发】使用 Python 扩展 UiBot 的功能"></p><p>如此，我们即可正常的在UiBot之中使用依赖</p>					
+					
+										
+					
+								</div>
+
+				
+				<div class="plugin d-flex justify-content-center mt-3">
+					
+				</div>
+				
+
+			</div>
+		</div>
+		
+		
+		
+		<div class="card card-postlist">
+			<div class="card-body">
+				<div class="card-title">
+					<div class="d-flex justify-content-between">
+						<div>
+							<b>最新回复</b> (<span class="posts">27</span>)
+						</div>
+						
+						<div>
+							
+						</div>
+					</div>
+				</div>
+				<ul class="list-unstyled postlist">
+													
+
+									<li class="media post" data-pid="97" data-uid="10042">
+						<a href="https://forum.uibot.com.cn/user-10042.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/10042.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-10042.htm" class="text-muted font-weight-bold">果子哩</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-1-15</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="97" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">2</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								支持！								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="150" data-uid="10500">
+						<a href="https://forum.uibot.com.cn/user-10500.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-10500.htm" class="text-muted font-weight-bold">mawu</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-1-18</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="150" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">3</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								可是我哦&nbsp;&nbsp;&nbsp;英语太low&nbsp;&nbsp;&nbsp;没法玩&nbsp;&nbsp;&nbsp;&nbsp;唔唔唔！！！								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="2706" data-uid="10307">
+						<a href="https://forum.uibot.com.cn/user-10307.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-10307.htm" class="text-muted font-weight-bold">Rick</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-5-9</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="2706" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">4</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								好铁，严重支持								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="11434" data-uid="47652">
+						<a href="https://forum.uibot.com.cn/user-47652.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-47652.htm" class="text-muted font-weight-bold">cyb</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-10-4</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="11434" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">5</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								good!								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="13778" data-uid="163332">
+						<a href="https://forum.uibot.com.cn/user-163332.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-163332.htm" class="text-muted font-weight-bold">Kim_163332</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-11-4</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="13778" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">6</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								学习了，懂了不少，感谢楼主								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="13780" data-uid="132537">
+						<a href="https://forum.uibot.com.cn/user-132537.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-132537.htm" class="text-muted font-weight-bold">chen_132537</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-11-4</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="13780" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">7</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<p>想问下比如说我test.py里还import了其他第三方模块（没法完整放到uibot/extend文件夹下），报错“模块加载中发生错误：No&nbsp;module&nbsp;named&nbsp;'PySimpleGUI'”之类的，但我不通过uibot却能正常运行模块，这个怎么解决？</p>								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="14169" data-uid="83050">
+						<a href="https://forum.uibot.com.cn/user-83050.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/83050.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-83050.htm" class="text-muted font-weight-bold">queue</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-11-10</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="14169" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">8</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<p><br></p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/83050_VD5JU7AXE3KNHRN.png" width="749" height="214" style="width: 742.406px; height: auto; cursor: pointer;"></p><p>记录一下这个 希望对别人有帮助</p>								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="14788" data-uid="86165">
+						<a href="https://forum.uibot.com.cn/user-86165.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-86165.htm" class="text-muted font-weight-bold">离哈</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-11-18</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="14788" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">9</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								搞定								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="14789" data-uid="132537">
+						<a href="https://forum.uibot.com.cn/user-132537.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-132537.htm" class="text-muted font-weight-bold">chen_132537</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-11-18</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="14789" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">10</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								有没有可能py文件和新建流程放在同一个目录下管理啊，每次都要移动到uibot固定路径下，不太方便管理啊								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="15871" data-uid="151807">
+						<a href="https://forum.uibot.com.cn/user-151807.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/151807.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-151807.htm" class="text-muted font-weight-bold">XP_151807</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2019-12-2</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="15871" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">11</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								UiBot不能装wxPython吗？								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="20505" data-uid="19300">
+						<a href="https://forum.uibot.com.cn/user-19300.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/19300.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-19300.htm" class="text-muted font-weight-bold">左眼工作室</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-2-27</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="20505" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">12</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								大赞								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="20515" data-uid="10009">
+						<a href="https://forum.uibot.com.cn/user-10009.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-10009.htm" class="text-muted font-weight-bold">Chu</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-2-27</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="20515" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">13</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<blockquote class="blockquote">
+		<a href="https://forum.uibot.com.cn/user-132537.htm" class="text-small text-muted user">
+			<img class="avatar-1" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+			chen_132537
+		</a>
+		有没有可能py文件和新建流程放在同一个目录下管理啊，每次都要移动到uibot固定路径下，不太方便管理啊
+		</blockquote>下个版本就这么做了								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="20632" data-uid="22625">
+						<a href="https://forum.uibot.com.cn/user-22625.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/22625.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-22625.htm" class="text-muted font-weight-bold">垦荒牛</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-3-1</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="20632" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">14</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<p><br></p><p><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/22625_B6JEDHPCATQ7D5F.png" width="686" height="501" style="width: 427.406px; height: auto; cursor: pointer;"></p><p>导入模块失败，依赖tkinter库，已经移动到\lib\site-packages下。是什么原因呢？</p>								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="22958" data-uid="292547">
+						<a href="https://forum.uibot.com.cn/user-292547.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-292547.htm" class="text-muted font-weight-bold">suxiaoxia</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-4-9</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="22958" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">15</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								是否支持selenium呢，有些软件在关闭浏览器时会自动清理uibot装在浏览器里的插件，导致无法web自动化								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="24446" data-uid="319236">
+						<a href="https://forum.uibot.com.cn/user-319236.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-319236.htm" class="text-muted font-weight-bold">qqcom_319236</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-5-26</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="24446" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">16</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								这里有个问题，py文件不能带有下划线，例如py_script.py,会报错“模块中没有找到函数&nbsp;”。需要改成pyscript，这个问题折腾了我一天。								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="25752" data-uid="31414">
+						<a href="https://forum.uibot.com.cn/user-31414.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-31414.htm" class="text-muted font-weight-bold">迪拜</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-7-1</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="25752" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">17</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<p><br><a href="https://forum.uibot.com.cn/upload/attach/202007/31414_6J5E8CJMN5B7CHE.png" target="_blank"><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/31414_6J5E8CJMN5B7CHE.png" width="800" height="163" style="width: 742.406px; height: auto; cursor: pointer;"></a><br><img src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/31414_M6N8Y8PRWFGPEDQ.jpg" width="646" height="80" style="width: 427.406px; height: auto; cursor: pointer;"></p><p>大佬 。&nbsp;找到的文件夹名称是&nbsp; &nbsp;egg&nbsp;结尾的移动到&nbsp;ub下面的\UiBot Creator Community\lib\site-packages ，还是报错哦</p><p>阿里云存储的oss2&nbsp; 的第三方库</p><p>帮忙解决一下，&nbsp;感谢</p><p><br></p>								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="29187" data-uid="242420">
+						<a href="https://forum.uibot.com.cn/user-242420.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-242420.htm" class="text-muted font-weight-bold">风华</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-11-4</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="29187" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">18</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								py还不熟练，								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="29188" data-uid="331834">
+						<a href="https://forum.uibot.com.cn/user-331834.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/331834.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-331834.htm" class="text-muted font-weight-bold">莫问工作室</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-11-4</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="29188" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">19</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								ub支持插件&nbsp;能有一个下着包的命令就好了。								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="29232" data-uid="316687">
+						<a href="https://forum.uibot.com.cn/user-316687.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-316687.htm" class="text-muted font-weight-bold">云中骏马</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-11-6</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="29232" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">20</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								感叹社区为啥没有收藏功能								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="30499" data-uid="368288">
+						<a href="https://forum.uibot.com.cn/user-368288.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-368288.htm" class="text-muted font-weight-bold">lee_368288</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-12-18</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="30499" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">21</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<blockquote class="blockquote">
+		<a href="https://forum.uibot.com.cn/user-10009.htm" class="text-small text-muted user">
+			<img class="avatar-1" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+			Chu
+		</a>
+		下个版本就这么做了
+		</blockquote>同一个python脚本，多个流程块调用，每个流程块都要import吗？								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="30511" data-uid="245821">
+						<a href="https://forum.uibot.com.cn/user-245821.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/245821.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-245821.htm" class="text-muted font-weight-bold">噗噗星</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2020-12-18</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="30511" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">22</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								mark								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="31325" data-uid="374755">
+						<a href="https://forum.uibot.com.cn/user-374755.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-374755.htm" class="text-muted font-weight-bold">王旭_374755</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2021-1-20</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="31325" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">23</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								python的支持真的low，每次修改完python代码成功运行后，代码就锁死了，如何修改都是前一次正确运行的代码副本，新代码根本导入不了，还得重启uibot，才会导入新的代码，来回折腾2-5分钟我才能调试一次，费劲。								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="31328" data-uid="10009">
+						<a href="https://forum.uibot.com.cn/user-10009.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-10009.htm" class="text-muted font-weight-bold">Chu</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2021-1-20</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="31328" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">24</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<blockquote class="blockquote">
+		<a href="https://forum.uibot.com.cn/user-374755.htm" class="text-small text-muted user">
+			<img class="avatar-1" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+			王旭_374755
+		</a>
+		python的支持真的low，每次修改完python代码成功运行后，代码就锁死了，如何修改都是前一次正确运行的代码副本，新代码根本导入不了，还得重启uibot，才会导入新的代码，来回折腾2-5分钟我才 ... 
+		</blockquote>新版本已经解决这个问题了								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="34293" data-uid="387797">
+						<a href="https://forum.uibot.com.cn/user-387797.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-387797.htm" class="text-muted font-weight-bold">王玉枝</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2021-5-9</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="34293" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">25</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								Name:&nbsp;xlrd<br>Version:&nbsp;2.0.1<br>Summary:&nbsp;Library&nbsp;for&nbsp;developers&nbsp;to&nbsp;extract&nbsp;data&nbsp;from&nbsp;Microsoft&nbsp;Excel&nbsp;(tm)&nbsp;.xls&nbsp;spreadsheet&nbsp;files<br>Home-page:&nbsp;http://www.python-excel.org/<br>Author:&nbsp;Chris&nbsp;Withers<br>Author-email:&nbsp;chris@withers.org<br>License:&nbsp;BSD<br>Location:&nbsp;c:\users\13013\appdata\local\programs\python\python37\lib\site-packages<br>Requires:<br>Required-by:<br>没有提示依赖&nbsp;&nbsp;但是执行插件报错&nbsp;&nbsp;什么原因&nbsp;模块&nbsp;main.store_to&nbsp;调用出错：'NoneType'&nbsp;object&nbsp;has&nbsp;no&nbsp;attribute&nbsp;'sheet_by_name'								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="34411" data-uid="391062">
+						<a href="https://forum.uibot.com.cn/user-391062.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/391062.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-391062.htm" class="text-muted font-weight-bold">掉进悬崖的小白</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2021-5-12</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="34411" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">26</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								<blockquote class="blockquote">
+		<a href="https://forum.uibot.com.cn/user-387797.htm" class="text-small text-muted user">
+			<img class="avatar-1" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+			王玉枝
+		</a>
+		Name: xlrd
+Version: 2.0.1
+Summary: Library for developers to extract data from Microsoft Excel (tm ... 
+		</blockquote>说明是你自己调用出问题了								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="35858" data-uid="176935">
+						<a href="https://forum.uibot.com.cn/user-176935.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-176935.htm" class="text-muted font-weight-bold">朱磊</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">2021-7-6</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="35858" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">27</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								为啥调用不报错,但是根本不执行py呢?								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+									<li class="media post" data-pid="39867" data-uid="544223">
+						<a href="https://forum.uibot.com.cn/user-544223.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									
+									<span class="username">
+										<a href="https://forum.uibot.com.cn/user-544223.htm" class="text-muted font-weight-bold">guowei067</a>
+									</span>
+									
+									
+									
+									<span class="date text-grey ml-2">9月前</span>
+									
+								</div>
+								<div class="text-right text-grey">
+									
+																		<a href="javascript:void(0)" data-tid="51" data-pid="39867" class="text-grey post_reply mr-3"><i class="icon-reply" title="引用"></i> <span class="d-none">引用</span></a>
+																		
+									
+									
+																		
+								
+									
+																		
+									
+									
+																		<span class="floor-parent">
+										<span class="floor mr-0">28</span>楼									</span>
+																		
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								
+																
+								
+								
+								excel&nbsp;file&nbsp;not&nbsp;supported&nbsp;,使用pandas读取excel&nbsp;read_excel								
+								
+								
+																
+								
+							</div>
+						</div>
+					</li>
+								
+									
+										<li class="post newpost media">
+						<a href="https://forum.uibot.com.cn/user-236847.htm" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+						</a>
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									<div>chay</div>
+								</div>
+								<div>
+									<span class="floor" id="newfloor">29</span>楼								</div>
+							</div>
+							<div>
+								<form action="https://forum.uibot.com.cn/post-create-51-1.htm" method="post" id="quick_reply_form" class="d-block">	
+									<input type="hidden" name="doctype" value="1">
+									<input type="hidden" name="return_html" value="1">
+									<input type="hidden" name="quotepid" value="0">
+									
+									<div class="message mt-1">
+										<textarea class="form-control" placeholder="内容" name="message" id="message"></textarea>
+									</div>
+									
+									<div class="text-muted mt-2 small">
+										<div class="d-flex justify-content-between">
+											<div>
+												
+												<button type="submit" class="btn btn-sm btn-secondary" id="submit" data-loading-text="正在提交..."> 回帖 </button>
+												
+											</div>
+											<div>
+												
+												<a class="icon-mail-forward text-muted" href="https://forum.uibot.com.cn/post-create-51.htm" id="advanced_reply"> 高级回复</a>
+												
+											</div>
+										</div>
+									</div>
+									
+								</form>
+							</div>
+						</div>
+					</li>
+												
+				</ul>
+			</div>
+		</div>
+		
+		
+		<div class="d-none threadlist"><input type="checkbox" name="modtid" value="51" checked=""></div>
+				
+				
+		
+		
+		<a role="button" class="btn btn-secondary btn-block xn-back col-lg-6 mx-auto mb-3" href="javascript:history.back();">返回</a>
+		
+	</div>
+	<div class="col-lg-3 d-none d-lg-block aside">
+	
+		<a role="button" class="btn btn-primary btn-block mb-3" href="https://forum.uibot.com.cn/thread-create-6.htm">发新帖</a>
+		
+		<div class="card card-user-info">
+			<div class="m-3 text-center">
+				<a href="https://forum.uibot.com.cn/user-6666.htm" tabindex="-1">
+					<img class="avatar-5" src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/avatar.png">
+				</a>
+				<h5><a href="https://forum.uibot.com.cn/user-0.htm">游客</a></h5>
+				
+			</div>
+			<div class="card-footer p-2">
+				<table class="w-100 small">
+					<tbody><tr align="center">
+						<td>
+							<span class="text-muted">主题数</span><br>
+							<b>0</b>
+						</td>
+						
+						<td>
+							<span class="text-muted">帖子数</span><br>
+							<b>0</b>
+						</td>
+												<td>
+							<span class="text-muted">精华数</span><br>
+							<b></b>
+						</td>
+						<td>
+							<span class="text-muted">注册排名</span><br>
+							<b>0</b>
+						</td>
+						
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+		
+		<div class="form-group">
+	<form action="https://forum.uibot.com.cn/search.htm" id="search_form">
+		<div class="input-group mb-3">
+			<input type="text" class="form-control" placeholder="关键词" name="keyword">
+			<div class="input-group-append">
+				<button class="btn btn-primary" type="submit">搜索</button>
+			</div>
+		</div>
+	</form>
+</div>
+		
+	</div>
+</div>
+
+
+
+				
+			
+		
+				
+		</div>
+	</main>
+	
+	
+	
+	<footer class="text-muted small bg-dark py-4 mt-3" id="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				
+				Powered by <a href="http://bbs.xiuno.com/" target="_blank" class="text-muted"><b>Xiuno BBS <span>4.0.4</span></b></a>
+				<span>Copyright ©<span> <a href="https://www.uibot.com.cn/" target="_blank">来也科技</a>
+&nbsp;&nbsp;
+<span>学习<a href="https://www.uibot.com.cn/" target="_blank">RPA</a>技术，就上UiBot开发者社区！</span>
+
+
+			</span></span></div>
+			<div class="col text-right">
+				
+				Processed: <b>0.016</b>, SQL: <b>39</b>
+				
+			</div>
+		</div>
+	</div>
+</footer>	
+	
+	
+	<!--[if ltg IE 9]>
+	<script>window.location = 'browser.htm';</script>
+	<![endif]-->
+	
+	
+	
+			<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/bbs.js.下载"></script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/jquery-3.1.0.js.下载"></script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/popper.js.下载"></script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/bootstrap.js.下载"></script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/xiuno.js.下载"></script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/bootstrap-plugin.js.下载"></script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/async.js.下载"></script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/form.js.下载"></script>
+	<script>
+	var debug = DEBUG = 0;
+	var url_rewrite_on = 1;
+	var forumarr = {
+    "1": "通知公告",
+    "6": "开发问题",
+    "2": "STORE",
+    "8": "教程学习",
+    "9": "源码插件",
+    "7": "RPA新闻",
+    "10": "对话机器人"
+};
+	var fid = 6;
+	var uid = 236847;
+	var gid = 101;
+	xn.options.water_image_url = 'view/img/water-small.png';	// 水印图片 / watermark image
+	</script>
+	<script src="./【插件开发】使用 Python 扩展 UiBot 的功能-开发问题-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区_files/bbs.js(1).下载"></script>
+	<script>
+// 版主管理：精华
+/*
+$('.mod-button button.digest').on('click', function() {
+	var modtid = $('input[name="modtid"]').checked();
+	if(modtid.length == 0) return $.alert(lang.please_choose_thread);
+	var radios = xn.form_radio('digest', {"0": "取消精华", "1": "一级精华","2": "二级精华", "3": "三级精华"});
+	$.confirm("设置主题为精华", function() {
+		var tids = xn.implode('_', modtid);
+		var digest = $('input[name="digest"]').checked();
+		var postdata = {digest: digest};
+		$.xpost(xn.url('mod-digest-'+tids), postdata, function(code, message) {
+			if(code != 0) return $.alert(message);
+			$.alert(message).delay(1000).location('');
+		});
+	}, {'body': '<p>'+"精华等级"+'：'+radios+'</p>'});
+})*/
+</script>
+	
+
+
+
+
+
+
+<script>
+var jform = $('#quick_reply_form');
+var jsubmit = $('#submit');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			var s = '<ul>'+message+'</ul>';
+			var jli = $(s).find('li');
+			jli.insertBefore($('.postlist > .post').last());
+			jsubmit.button('reset');
+			$('#message').val('');
+			
+			// 楼层 +1
+			var jfloor = $('#newfloor');
+			jfloor.html(xn.intval(jfloor.html()) + 1);
+			
+			// 回复数 +1
+			var jposts = $('.posts');
+			jposts.html(xn.intval(jposts.html()) + 1);
+			
+		} else if(code < 0) {
+			$.alert(message);
+			jsubmit.button('reset');
+		} else {
+			jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+
+// 缩放图片，适应屏幕大小。
+function resize_image() {
+	var jmessagelist = $('div.message');
+	var first_width = jmessagelist.width(); // 815 : 746; //  734 746
+	jmessagelist.each(function() {
+		var jdiv = $(this);
+		var maxwidth = jdiv.attr('isfirst') ? first_width : jdiv.width(); //  734 746
+		var jmessage_width = Math.min(jdiv.width(), maxwidth);
+		jdiv.find('img, embed, iframe, video').each(function() {
+			var jimg = $(this);
+			var img_width = this.org_width;
+			var img_height = this.org_height;
+			if(!img_width) {
+				var img_width = jimg.attr('width');
+				var img_height = jimg.attr('height');
+				this.org_width = img_width;
+				this.org_height = img_height;
+			}
+			//var percent = xn.min(100, xn.ceil((img_width / jmessage_width) * 100));
+			if(img_width > jmessage_width) {
+				if(this.tagName == 'IMG') {
+					jimg.width(jmessage_width);
+					jimg.css('height', 'auto');
+					jimg.css('cursor', 'pointer');
+					jimg.on('click', function() {
+						//window.open(jimg.attr('src'));
+					});
+				} else {
+					jimg.width(jmessage_width);
+					var height = (img_height / img_width) * jimg.width();
+					jimg.height(height);
+				}
+			}
+		});
+	});
+}
+
+// 对于超宽的表格，加上响应式
+function resize_table() {
+	$('div.message').each(function() {
+		var jdiv = $(this);
+		jdiv.find('table').addClass('table').wrap('<div class="table-responsive"></div>'); 
+	});
+}
+
+$(function() {
+	resize_image();
+	resize_table();
+	$(window).on('resize', resize_image);
+});
+
+// 输入框自动伸缩
+
+var jmessage = $('#message');
+jmessage.on('focus', function() {if(jmessage.t) { clearTimeout(jmessage.t); jmessage.t = null; } jmessage.css('height', '8rem'); });
+jmessage.on('blur', function() {jmessage.t = setTimeout(function() { jmessage.css('height', '2.5rem');}, 1000); });
+
+$('li[data-active="fid-6"]').addClass('active');
+
+</script>
+
+<script>
+jsearch_form = $('#search_form');
+jsearch_form.on('submit', function() {
+	var keyword = jsearch_form.find('input[name="keyword"]').val();
+	var url = xn.url('search-'+xn.urlencode(keyword));
+	window.location = url;
+	return false;
+});
+</script></body></html>
